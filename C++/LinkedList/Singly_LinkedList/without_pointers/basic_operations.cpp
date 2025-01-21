@@ -32,6 +32,7 @@ public:
         Node newNode(data);
         size++;
         nodes.push_back(newNode);
+
         int newIdx = nodes.size() - 1;
         if (headIdx == -1)
         {
@@ -42,7 +43,7 @@ public:
             nodes[newIdx].next = headIdx;
             headIdx = newIdx;
         }
-    }
+        }
 
     void addLast(int data)
     {
