@@ -22,6 +22,11 @@ class BST
 public:
     Node *root = NULL;
 
+    void createBST(int data)
+    {
+        root = addNode(root, data);
+    }
+
     Node *addNode(Node *root, int data)
     {
         Node *newNode = new Node(data);
