@@ -532,22 +532,41 @@ public:
         }
     }
 
-    void dfs(int src, bool visited[])
+    void dfsUtil(int src, bool visited[])
     {
-        cout << src << " ";
         visited[src] = true;
+        cout << src << " ";
 
         Node *temp = adjList[src].head;
         while (temp != NULL)
         {
-            int neighbour = temp->data;
-            if (!visited[neighbour])
+            int neigh = temp->data;
+            if (!visited[neigh])
             {
-                dfs(neighbour, visited);
+                dfsUtil(neigh, visited);
             }
-
             temp = temp->next;
         }
+    }
+
+    void dfs(int src)
+    {
+        bool *visited = new bool[V];
+        for (int i = 0; i < V; i++)
+        {
+            visited[i] = false;
+        }
+
+        cout << "DFS Traversal : ";
+        for (int i = 0; i < V; i++)
+        {
+            if (!visited[i])
+            {
+                dfsUtil(i, visited);
+            }
+        }
+        delete[] visited;
+        cout << endl;
     }
 
     bool isCycleDFS(int src, bool visited[], bool recStack[])
@@ -669,6 +688,7 @@ public:
 
         return false;
     }
+
     void display()
     {
         // Adjacency Matrix Printing
@@ -719,7 +739,7 @@ int main()
 
     cout << "DFS Traversal : ";
     bool *visited = new bool[Vertices]();
-    g.dfs(0, visited);
+    g.dfs(0);
     cout << endl;
 
     cout << g.hasCycleDFS() << endl;
@@ -739,3 +759,8 @@ int main()
     }
     return 0;
 }
+
+// vertices={1,2,3,4,5,6}
+// edges={{1,2},{1,4},{1,6},{3,2},{3,4},{3,6},{5,2},{5,4},{5,6}}
+// vertices={a,b,c,d,e,f}
+// edges={{a,d},{a,e},{a,f},{b,d},{b,e},{b,f},{c,d},{c,e},{c,f}}
