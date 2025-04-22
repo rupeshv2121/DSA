@@ -20,11 +20,11 @@ public:
         adjMat = new int *[V];
         // adjMat2 = new int *[V];
 
-        for (int i = 0; i < V; i++)
+        for (int i = 1; i < V + 1; i++)
         {
             adjMat[i] = new int[V];
             // adjMat2[i] = new int[V];
-            for (int j = 0; j < V; j++)
+            for (int j = 1; j < V + 1; j++)
             {
                 adjMat[i][j] = 0;
                 // adjMat2[i][j] = 0;
@@ -40,9 +40,9 @@ public:
 
     void display()
     {
-        for (int i = 0; i < V; i++)
+        for (int i = 1; i < V + 1; i++)
         {
-            for (int j = 0; j < V; j++)
+            for (int j = 1; j < V + 1; j++)
             {
                 cout << adjMat[i][j] << " ";
             }
@@ -102,8 +102,8 @@ public:
 
     void bellmanFord(int src)
     {
-        int *dist = new int[V];
-        for (int i = 0; i < V; i++)
+        int *dist = new int[V + 1];
+        for (int i = 1; i <= V; i++)
         {
             dist[i] = INT_MAX;
         }
@@ -111,9 +111,9 @@ public:
 
         for (int i = 1; i <= V - 1; i++)
         {
-            for (int u = 0; u < V; u++)
+            for (int u = 1; u <= V; u++)
             {
-                for (int v = 0; v < V; v++)
+                for (int v = 1; v <= V; v++)
                 {
                     if (adjMat[u][v] != 0 && dist[u] != INT_MAX && dist[u] + adjMat[u][v] < dist[v])
                     {
@@ -125,9 +125,9 @@ public:
 
         // Check for negative-weight cycles
         bool hasNegativeCycle = false;
-        for (int u = 0; u < V; u++)
+        for (int u = 1; u <= V; u++)
         {
-            for (int v = 0; v < V; v++)
+            for (int v = 1; v <= V; v++)
             {
                 if (adjMat[u][v] != 0 && dist[u] != INT_MAX && dist[u] + adjMat[u][v] < dist[v])
                 {
@@ -149,7 +149,7 @@ public:
         else
         {
             cout << "Bellman-Ford shortest distances from source " << src << ":" << endl;
-            for (int i = 0; i < V; i++)
+            for (int i = 1; i <= V; i++)
             {
                 cout << src << " -> " << i << " (";
                 if (dist[i] == INT_MAX)
@@ -163,10 +163,10 @@ public:
 
     void floydWarshall()
     {
-        int dist[V][V];
-        for (int i = 0; i < V; i++)
+        int dist[V + 1][V + 1];
+        for (int i = 1; i <= V; i++)
         {
-            for (int j = 0; j < V; j++)
+            for (int j = 1; j <= V; j++)
             {
                 if (i == j)
                     dist[i][j] = 0;
@@ -177,11 +177,11 @@ public:
             }
         }
 
-        for (int k = 0; k < V; k++)
+        for (int k = 1; k <= V; k++)
         {
-            for (int i = 0; i < V; i++)
+            for (int i = 1; i <= V; i++)
             {
-                for (int j = 0; j < V; j++)
+                for (int j = 1; j <= V; j++)
                 {
                     if (dist[i][k] + dist[k][j] < dist[i][j])
                     {
@@ -192,7 +192,7 @@ public:
         }
 
         // negative cycle detection
-        for (int i = 0; i < V; i++)
+        for (int i = 1; i <= V; i++)
         {
             if (dist[i][i] < 0)
             {
@@ -202,13 +202,13 @@ public:
         }
 
         cout << "Floyd's Warshall : " << endl;
-        for (int i = 0; i < V; i++)
+        for (int i = 1; i <= V; i++)
         {
-            for (int j = 0; j < V; j++)
+            for (int j = 1; j <= V; j++)
             {
                 if (dist[i][j] == INT_MAX / 2)
                 {
-                    cout << "I ";
+                    cout << "INF ";
                 }
                 else
                 {
@@ -284,87 +284,60 @@ int main()
 
     Graph *g = nullptr, *g2 = nullptr;
     string line;
-
-    int vertices1, edges1 = 0;
-    int vertices2, edges2 = 0;
     int lineNumber = 1;
+    int nov = 0;
+
     while (getline(inputFile, line))
     {
-        stringstream ss(line);
-        string name;
         if (lineNumber == 1)
         {
-            int count = 0;
-            getline(ss, name, '=');
-            for (int i = 10; i < line.length() - 1; i++)
+            for (int i = 3; i < line.length() - 1; i++)
             {
                 if (line[i] != ',')
                 {
-                    count++;
+                    nov++;
                 }
             }
-            vertices1 = count;
-            g = new Graph(vertices1);
+
+            cout << "Vertices : " << nov << endl;
+            g = new Graph(nov);
         }
         else if (lineNumber == 2)
         {
-            getline(ss, name, '=');
-            for (int i = 7; i < line.length() - 1; i++)
+            for (int i = 3; i < line.length() - 1; i++)
             {
-                if (line[i] == '{' && line[i + 6] == '}' && line[i + 2] == ',' && line[i + 4] == ',')
+                if (line[i] == '{' && i + 6 < line.length())
                 {
-                    edges1++;
-                    int u = line[i + 1] - '0'; // Numeric vertex for Graph 1
-                    int v = line[i + 3] - '0'; // Numeric vertex for Graph 1
-                    int wt = line[i + 5] - '0';
+                    int u = line[i + 1] - '0';
+                    int v = line[i + 3] - '0';
+
+                    int wt;
+                    if (line[i + 5] == '-')
+                    {
+                        wt = -(line[i + 6] - '0');
+                    }
+                    else
+                    {
+                        wt = line[i + 5] - '0';
+                    }
 
                     g->addEdge(u, v, wt);
                 }
             }
         }
-        // else if (lineNumber == 3)
-        // {
-        //     int count = 0;
-        //     getline(ss, name, '=');
-        //     for (int i = 10; i < line.length() - 1; i++)
-        //     {
-        //         if (line[i] != ',')
-        //         {
-        //             count++;
-        //         }
-        //     }
-        //     vertices2 = count;
-        //     g2 = new Graph(vertices2);
-        // }
-        // else
-        // {
-        //     getline(ss, name, '=');
-        //     for (int i = 7; i < line.length() - 1; i++)
-        //     {
-        //         if (line[i] == '{' && line[i + 4] == '}' && line[i + 2] == ',')
-        //         {
-        //             edges2++;
-        //             int u = line[i + 1] - 'a'; // Alphabetic vertex for Graph 2
-        //             int v = line[i + 3] - 'a'; // Alphabetic vertex for Graph 2
 
-        //             g2->addEdge2(u, v);
-        //         }
-        //     }
-        // }
         lineNumber++;
     }
+
+    inputFile.close();
 
     cout << "Graph 1" << endl;
     g->display();
 
-    cout << endl
-         << "Vertices 1 = " << vertices1 << " , " << "Edges 1 = " << edges1;
-    cout << endl;
-
-    g->dijstra(0);
-    g->bellmanFord(0);
+    // g->dijstra(0);
+    g->bellmanFord(1);
     g->floydWarshall();
-    g->primAlgo(0);
+    // g->primAlgo(0);
 
     // cout << "Graph 2" << endl;
     // g2->display2();
