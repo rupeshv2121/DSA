@@ -282,7 +282,7 @@ int main()
         cout << "File open successfully" << endl;
     }
 
-    Graph *g = nullptr, *g2 = nullptr;
+    Graph *g = nullptr;
     string line;
     int lineNumber = 1;
     int nov = 0;

@@ -235,7 +235,7 @@ public:
         for (int i = 1; i < V; i++)
         {
             finalCost += dist[i];
-            cout << parent[i] << " -> " << i << " : " << adjMat[i][parent[i]] << endl;
+            cout << parent[i] << " -> " << i << " : " << adjMat[parent[i]][i] << endl;
         }
         cout << "Cost of MST : " << finalCost << endl;
     }
